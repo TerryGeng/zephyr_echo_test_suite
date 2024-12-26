@@ -1,0 +1,28 @@
+&pinctrl {
+    spi1_default: spi1_default {
+		group1 {
+			pinmux = <SPI1_CSN_P9>, <SPI1_SCK_P10>, <SPI1_TX_P11>;
+		};
+		group2 {
+			pinmux = <SPI1_RX_P8>;
+			input-enable;
+		};
+	};
+};
+
+&spi1 {
+    status = "ok";
+    cs-gpios = <&gpio0 9 GPIO_ACTIVE_LOW>;  // might be omitted since spi copntroller has a dedicated CSn pin
+    pinctrl-0 = <&spi1_default>;
+    pinctrl-names = "default";
+
+    test_spi_w5500@0 {
+		compatible = "wiznet,w5500";
+        label="w5500";
+        reg = <0>;
+        spi-max-frequency = <60000000>;
+        int-gpios = <&gpio0 21 GPIO_ACTIVE_LOW>;
+        reset-gpios = <&gpio0 20 GPIO_ACTIVE_LOW>;
+        local-mac-address = [00 08 dc 12 34 56];
+    };
+};
